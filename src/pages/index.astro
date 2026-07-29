@@ -130,20 +130,30 @@ try {
 		</div>
 
 		<script define:vars={{ CMS_URL }}>
-			// Listen for Payload Admin live preview messages in real time!
+			// 1. Notify Payload Admin that preview iframe is ready to receive live updates
+			if (window.parent && window.parent !== window) {
+				window.parent.postMessage('payload-live-preview-ready', '*');
+			}
+
+			// 2. Listen for Payload Admin live preview messages in real time!
 			window.addEventListener('message', (event) => {
 				try {
-					const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-					
-					// Handle Payload Live Preview postMessage payload
-					const liveData = data?.data || data;
+					let raw = event.data;
+					if (typeof raw === 'string') {
+						try { raw = JSON.parse(raw); } catch (e) {}
+					}
 
-					if (liveData?.test_heading !== undefined) {
+					const liveData = raw?.data || raw;
+					if (!liveData || typeof liveData !== 'object') return;
+
+					// Update heading in real-time
+					if (liveData.test_heading !== undefined) {
 						const headingEl = document.getElementById('test-heading');
 						if (headingEl) headingEl.innerText = liveData.test_heading;
 					}
 
-					if (liveData?.test_image) {
+					// Update image in real-time
+					if (liveData.test_image) {
 						let imgUrl = null;
 						if (typeof liveData.test_image === 'object' && liveData.test_image.url) {
 							imgUrl = liveData.test_image.url;
