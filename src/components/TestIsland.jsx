@@ -10,14 +10,20 @@ export default function TestIsland({ initialData, cmsUrl }) {
 
   const heading = data?.test_heading || initialData?.test_heading || 'No Heading Set';
 
+  const formatImageUrl = (urlStr) => {
+    if (!urlStr || typeof urlStr !== 'string') return null;
+    let clean = urlStr.replace(/^http:\/\/localhost:(3000|4000)/, cmsUrl);
+    if (clean.startsWith('http')) return clean;
+    return `${cmsUrl}${clean.startsWith('/') ? '' : '/'}${clean}`;
+  };
+
   let imageUrl = null;
   const imgObj = data?.test_image || initialData?.test_image;
   if (imgObj) {
     if (typeof imgObj === 'object' && imgObj.url) {
-      const rawUrl = imgObj.url;
-      imageUrl = rawUrl.startsWith('http') ? rawUrl : `${cmsUrl}${rawUrl.startsWith('/') ? '' : '/'}${rawUrl}`;
+      imageUrl = formatImageUrl(imgObj.url);
     } else if (typeof imgObj === 'string') {
-      imageUrl = imgObj.startsWith('http') ? imgObj : `${cmsUrl}${imgObj.startsWith('/') ? '' : '/'}${imgObj}`;
+      imageUrl = formatImageUrl(imgObj);
     }
   }
 
