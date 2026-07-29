@@ -8,7 +8,7 @@ export default function TestIsland({ initialData, cmsUrl }) {
     depth: 2,
   });
 
-  const heading = data?.test_heading || initialData?.test_heading || 'No Heading Set';
+  const heading = data?.test_heading || initialData?.test_heading;
 
   const formatImageUrl = (urlStr) => {
     if (!urlStr || typeof urlStr !== 'string') return null;
@@ -29,33 +29,12 @@ export default function TestIsland({ initialData, cmsUrl }) {
 
   return (
     <div className="card">
-      <span className="tag">Astro Island + React Live Preview</span>
-      
-      <div>
-        <h1>Heading: <span>{heading}</span></h1>
-
+      {heading && <h1>{heading}</h1>}
+      {imageUrl && (
         <div className="image-box">
-          {imageUrl ? (
-            <div>
-              <p><strong>Uploaded Image from Payload CMS:</strong></p>
-              <img src={imageUrl} alt="Test Image from Payload CMS" />
-            </div>
-          ) : (
-            <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>
-              📷 Image is currently empty. Upload an image in Payload CMS Admin!
-            </p>
-          )}
+          <img src={imageUrl} alt={heading || 'Test Image'} />
         </div>
-      </div>
-
-      <div className="info">
-        <p>⚡ <strong>How Astro Island Live Preview Works:</strong></p>
-        <ul>
-          <li>Pre-rendered at <strong>build time</strong> into 100% static HTML for maximum speed.</li>
-          <li>Hydrated on client via <code>client:load</code> with <code>@payloadcms/live-preview-react</code>!</li>
-          <li>Payload Admin updates state <strong>live in real-time as you type</strong>!</li>
-        </ul>
-      </div>
+      )}
     </div>
   );
 }
