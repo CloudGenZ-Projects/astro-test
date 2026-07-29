@@ -13,6 +13,6 @@
   },
   "dependencies": {
     "@payloadcms/live-preview": "^3.86.0",
-    "astro": "^7.1.5"
+    "astro": "^4.16.19"
   }
 }
